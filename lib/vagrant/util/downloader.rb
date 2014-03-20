@@ -207,11 +207,14 @@ module Vagrant
         end
 
         # Specify some options for the subprocess
-        subprocess_options = {}
+        subprocess_options = {:env => {}}
+ 
+        subprocess_options[:env]['http_proxy'] = ENV['http_proxy'] if ENV['http_proxy']
+        subprocess_options[:env]['https_proxy'] = ENV['https_proxy'] if ENV['https_proxy']
+        subprocess_options[:env]['ftp_proxy'] = ENV['ftp_proxy'] if ENV['ftp_proxy']
 
         # If we're in Vagrant, then we use the packaged CA bundle
         if Vagrant.in_installer?
-          subprocess_options[:env] ||= {}
           subprocess_options[:env]["CURL_CA_BUNDLE"] =
             File.expand_path("cacert.pem", ENV["VAGRANT_INSTALLER_EMBEDDED_DIR"])
         end
